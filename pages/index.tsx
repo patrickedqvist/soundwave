@@ -1,10 +1,8 @@
-import Head from 'next/head';
-import Image from 'next/image';
-
 import Page from '@/components/ui/Page';
 import Layout from '@/components/ui/Layout';
+import type { GetServerSideProps, NextPage } from 'next';
 
-export default function Home() {
+const Home: NextPage = (props) => {
   const meta = {
     title: `Soundwave`,
     description: `See your spotify`,
@@ -56,3 +54,9 @@ export default function Home() {
     </Page>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return { props: { } };
+};
+
+export default Home;

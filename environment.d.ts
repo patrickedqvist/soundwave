@@ -4,6 +4,7 @@ declare global {
       SPOTIFY_CLIENT_ID: string;
       SPOTIFY_CLIENT_SECRET: string;
       SPOTIFY_REDIRECT_URI: string;
+      AUTH_SECRET: string;
     }
   }
 }

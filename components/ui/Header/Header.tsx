@@ -1,9 +1,11 @@
 import Search from "@/components/common/Search";
 import Logotype from "@/components/ui/Logotype"
 import { ChangeEvent, useState } from "react";
+import { useSession, signIn, signOut } from 'next-auth/react';
 
 const Header = () => {
     const [searchQuery, setSearchQuery] = useState('');
+    const { data: session } = useSession();
 
     const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(event.target.value)
@@ -19,6 +21,13 @@ const Header = () => {
               placeholder="Search among 100,000+ music tracks"
               onChange={handleOnChange}
             />
+          </div>
+          <div>
+            {session ? (
+              <button onClick={() => signOut()}>Sign out</button>
+            ) : (
+              <button onClick={() => signIn('spotify', { callbackUrl: 'http://localhost:3000' })}>Sign in</button>
+            )}
           </div>
         </div>
       </div>
