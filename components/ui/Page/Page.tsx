@@ -18,6 +18,7 @@ const Page: FC<PageProps> = ({ meta, children }) => {
   const title = meta.title || 'soundwave';
   const url = meta.url || router.asPath;
   const description = meta.description || 'soundwave';
+
   return (
     <div className="page-container">
       <Head>

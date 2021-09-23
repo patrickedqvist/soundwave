@@ -4,7 +4,7 @@ import { signIn } from 'next-auth/react';
 import Page from '@/components/ui/Page';
 import Layout from '@/components/ui/Layout';
 
-export default function Home() {
+export default function LoginPage() {
   const meta = {
     title: `Soundwave`,
     description: `See your spotify`,

@@ -2,6 +2,7 @@ import Search from "@/components/common/Search";
 import Logotype from "@/components/ui/Logotype"
 import { ChangeEvent, useState } from "react";
 import { useSession, signIn, signOut } from 'next-auth/react';
+import Link from 'next/link';
 
 const Header = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -14,7 +15,9 @@ const Header = () => {
     return (
       <div className="container mx-auto ">
         <div className="flex gap-x-8 py-6 items-center">
-          <Logotype />
+          <Link href="/" passHref>
+            <a title="Back to homepage"><Logotype /></a>
+          </Link>
           <div className="flex-1">
             <Search
               value={searchQuery}

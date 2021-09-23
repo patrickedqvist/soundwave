@@ -1,3 +1,4 @@
+import SpotifyClient from '@/services/spotify';
 import { NextApiRequest, NextApiResponse } from 'next';
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import SpotifyProvider from 'next-auth/providers/spotify';
@@ -44,19 +45,34 @@ const options: NextAuthOptions = {
     },
   },
   callbacks: {
-    async jwt({ token, account }) {
-      if (account) {
-        token.id = account.userId;
-        token.accessToken = account.access_token;
+    async jwt({ token, user, account }) {
+
+      // Initial sign in
+      if (account && user) {
+        return {
+          accessToken: account.access_token,
+          // @ts-expect-error
+          accessTokenExpires: Date.now() + account.expires_at * 1000,
+          refreshToken: account.refresh_token,
+          user,
+        };
       }
-      return token;
+      
+      // Return previous token if the access token has not expired yet
+      // @ts-expect-error
+      if (Date.now() < token.accessTokenExpires) {
+        return token;
+      }
+
+      // Access token has expired, try to update it
+      return SpotifyClient.refreshAccessToken(token);
     },
-    async session({ session, token, user }) {
-      if ( user ) {
-        session.user = user;
-      }    
+    async session({ session, token }) {
+      // @ts-expect-error
+      session.user = token.user;
       session.accessToken = token.accessToken;
-      console.log('session', session);
+      session.error = token.error;
+
       return session;
     }
   },
