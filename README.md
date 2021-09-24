@@ -2,6 +2,17 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+Start by adding a `.env` file with following variables
+```bash
+SPOTIFY_CLIENT_ID=YOUR_SPOTIFY_CLIENT_ID
+SPOTIFY_CLIENT_SECRET=YOUR_SPOTIFY_SECRET
+SPOTIFY_REDIRECT_URI=http://localhost:3000/api/auth/callback/spotify
+AUTH_SECRET=A_GENERATED_STRING
+NEXTAUTH_URL=http://localhost:3000
+```
+
+To get a client id and client secret you need to register an application at [Spotify Developer Dashboard](https://developer.spotify.com/dashboard) 
+
 First, run the development server:
 
 ```bash

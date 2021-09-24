@@ -97,6 +97,10 @@ class SpotifyClient {
     } catch (error) {
       if (isAxiosError(error)) {
         console.error(error.message, error.response?.data);
+        return {
+          ...token,
+          error: 'RefreshAccessTokenError',
+        };
       }
 
       return {
