@@ -1,0 +1,81 @@
+.button {
+  --button-size: 32px;
+  --button-transition-duration: 0.2s;
+  --button-icon-size: 24px;
+  --button-icon-stroke: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: var(--button-size);
+  height: var(--button-size);
+}
+
+.icon {
+  position: relative;
+  display: block;
+  font-size: var(--button-icon-size);
+  width: 1em;
+  height: var(--button-icon-stroke);
+  border-radius: 2px;
+  color: inherit;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  transform: scale(1);
+}
+
+.icon::before,
+.icon::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-image: inherit;
+  border-radius: inherit;
+}
+
+.icon::after {
+  width: 55%;
+  right: 0;
+  left: auto;
+}
+
+.iconClose {
+  background-size: 100% 100%;
+  will-change: transform, background-size;
+  transition-property: transform, background-size;
+  transition-duration: var(--button-transition-duration, 0.2s);
+}
+
+.iconClose::before,
+.iconClose::after {
+  will-change: inherit;
+  transition: inherit;
+}
+
+.iconClose::before {
+  transform: translateY(-6px) rotate(0);
+}
+
+.iconClose::after {
+  transform: translateY(6px) rotate(0);
+}
+
+.button:active .iconClose {
+  transform: scale(0.9);
+}
+
+.animate .iconClose {
+  background-size: 0% 100%;
+}
+
+.animate .iconClose::before {
+  transform: translateY(0) rotate(45deg);
+}
+
+.animate .iconClose::after {
+  width: 100%;
+  left: 0;
+  transform: translateY(0) rotate(-45deg);
+}

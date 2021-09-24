@@ -3,13 +3,13 @@ import { NoSessionError } from '@/services/spotify/errors';
 import isAxiosError from '@/utils/isAxiosError';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-const NewReleasesHandler = async (
+const MeHandler = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
   try {
     const client = new SpotifyClient({ req, res });
-    const response = await client.getAllNewReleases({ limit: 5 });
+    const response = await client.getCurrentUsersProfile();
     res.status(200).json(response.data);
   } catch (error) {
     if (error instanceof NoSessionError) {
@@ -22,4 +22,4 @@ const NewReleasesHandler = async (
   }
 };
 
-export default NewReleasesHandler;
+export default MeHandler;

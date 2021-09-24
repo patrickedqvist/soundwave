@@ -14,13 +14,14 @@ const SpotifyScopes = [
   'user-read-email',
   'user-read-private',
   'user-library-read',
-  'playlist-read-collaborative',
 ];
 
 const providers = [
   SpotifyProvider({
     clientId: process.env.SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+    // @ts-expect-error
+    redirect_uri: process.env.SPOTIFY_REDIRECT_URI,
     // @ts-ignore
     scope: SpotifyScopes.join(' '),
   }),

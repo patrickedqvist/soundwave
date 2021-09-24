@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
+import { signIn, useSession } from 'next-auth/react';
 
 interface Meta {
   title: string | null;
@@ -18,6 +19,15 @@ const Page: FC<PageProps> = ({ meta, children }) => {
   const title = meta.title || 'soundwave';
   const url = meta.url || router.asPath;
   const description = meta.description || 'soundwave';
+
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    // If a refresh of access token failed then try to force login to hopefully resolve the error
+    if (session?.error === 'RefreshAccessTokenError') {
+      signIn('spotify');
+    }
+  }, [session]);
 
   return (
     <div className="page-container">

@@ -5,6 +5,7 @@ import type { GetServerSideProps, NextPage } from 'next';
 import { useSession, signIn } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import FeaturedPlaylists from '@/components/features/FeaturedPlaylists';
 
 const Home: NextPage = (props) => {
 
@@ -27,7 +28,13 @@ const Home: NextPage = (props) => {
       <Layout>
         <div className="container mx-auto">
 
-          <NewReleases />
+          <div className="mb-10">
+            <NewReleases />
+          </div>
+
+          <div className="mb-10">
+            <FeaturedPlaylists />
+          </div>
          
         </div>
       </Layout>

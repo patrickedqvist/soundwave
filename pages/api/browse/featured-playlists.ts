@@ -9,13 +9,13 @@ const NewReleasesHandler = async (
 ) => {
   try {
     const client = new SpotifyClient({ req, res });
-    const response = await client.getAllNewReleases({ limit: 5 });
+    const response = await client.getAllFeaturedPlaylists({ limit: 5 });
     res.status(200).json(response.data);
   } catch (error) {
     if (error instanceof NoSessionError) {
       res.status(401).json({ error: 'no session was available' });
     } else if (isAxiosError(error) && error.response?.status === 401) {
-      res.status(401).json({ error: 'unathorized' });
+      res.redirect(307, '/login');     
     } else {
       res.status(400).json({ error: 'Ops something went wrong' });
     }

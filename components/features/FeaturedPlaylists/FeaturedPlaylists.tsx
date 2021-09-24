@@ -1,15 +1,15 @@
 import axios, { AxiosResponse } from 'axios';
 import useSWR from 'swr';
 import Image from 'next/image';
-import { GetAllNewReleases } from '@/services/spotify/models';
+import { GetAllFeaturedPlaylists } from '@/services/spotify/models';
 import Section from '@/components/common/Section';
 import { SkeletonRectangle } from '@/components/ui/Skeleton';
 
-const fetcher = () => axios.get('/api/browse/new-releases');
+const fetcher = () => axios.get('/api/browse/featured-playlists');
 
-export const NewReleases = () => {
-  const { data: res, error } = useSWR<AxiosResponse<GetAllNewReleases>>(
-    'browse-new-releases',
+export const FeaturedPlaylists = () => {
+  const { data: res, error } = useSWR<AxiosResponse<GetAllFeaturedPlaylists>>(
+    'browse-featured-playlists',
     fetcher
   );
 
@@ -25,35 +25,32 @@ export const NewReleases = () => {
         </div>
       </Section>
     );
+  } else if ( !res ) {
+    return null;
   }
- 
 
   return (
-    <Section title="New releases">
+    <Section title={res.data.message}>
       <div className="grid grid-cols-5 gap-1">
-        {res?.data?.albums?.items?.map((album) => {
-          const image = album.images[0];
-          const artistsNames = album.artists.reduce<string[]>(
-            (memo, artist) => {
-              memo.push(artist.name);
-              return memo;
-            },
-            []
-          );
+        {res?.data?.playlists?.items?.map((playlist) => {
+          const image = playlist.images[0];
           return (
-            <div key={album.id} className="bg-white p-5">
+            <div key={playlist.id} className="bg-white p-5">
               <Image
                 src={image.url}
-                height={image.height}
-                width={image.width}
-                alt={album.name}
+                width={300}
+                height={300}
+                alt={playlist.name}
               />
-              <div className="mt-3">
+              <div className="mt-3 flex flex-col">
                 <h3 className="font-bold text-lg leading-6 mb-2">
-                  {album.name}
+                  {playlist.name}
                 </h3>
                 <span className="text-base text-gray-500">
-                  {artistsNames.join(', ')}
+                  {playlist.description} <br />
+                </span>
+                <span className="text-sm text-gray-500 mt-2">
+                  By {playlist.owner.display_name}
                 </span>
               </div>
             </div>
@@ -64,4 +61,4 @@ export const NewReleases = () => {
   );
 };
 
-export default NewReleases;
+export default FeaturedPlaylists;

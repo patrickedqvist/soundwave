@@ -4,7 +4,12 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { JWT } from 'next-auth/jwt';
 import { getSession } from 'next-auth/react';
 import { ContextMissingError, NoSessionError } from './errors';
-import { AuthorizationResponse, GetAllNewReleases } from './models';
+import {
+  AuthorizationResponse,
+  GetAllFeaturedPlaylists,
+  GetAllNewReleases,
+  UserProfile,
+} from './models';
 
 interface Context {
   req: NextApiRequest;
@@ -57,7 +62,7 @@ class SpotifyClient {
         Authorization: `Bearer ${session.accessToken}`,
       },
     });
-
+    
     return response;
   }
 
@@ -69,11 +74,11 @@ class SpotifyClient {
         `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
       ).toString('base64');
 
-      const params = new URLSearchParams()
+      const params = new URLSearchParams();
       params.append('grant_type', 'refresh_token');
-      
-      if ( typeof token.refreshToken === 'string' ) {
-        params.append('refresh_token', token.refreshToken)
+
+      if (typeof token.refreshToken === 'string') {
+        params.append('refresh_token', token.refreshToken);
       }
 
       const response = await axios.post<AuthorizationResponse>(url, params, {
@@ -90,9 +95,8 @@ class SpotifyClient {
         refreshToken: response.data.refresh_token ?? token.refreshToken, // Fall back to old refresh token
       };
     } catch (error) {
-      
-      if ( isAxiosError(error) ) {
-        console.error(error.message, error.response?.data)
+      if (isAxiosError(error)) {
+        console.error(error.message, error.response?.data);
       }
 
       return {
@@ -103,8 +107,8 @@ class SpotifyClient {
   }
 
   /**
+   * Get All New Releases
    * Get a list of new album releases featured in Spotify (shown, for example, on a Spotify player’s “Browse” tab).
-   * @returns albums
    */
   getAllNewReleases(args?: { limit?: number; offset?: number }) {
     const params = new URLSearchParams();
@@ -118,6 +122,35 @@ class SpotifyClient {
     }
 
     return this.get<GetAllNewReleases>('/browse/new-releases', params);
+  }
+
+  /**
+   * Get All Featured Playlists
+   * Get a list of Spotify featured playlists (shown, for example, on a Spotify player’s ‘Browse’ tab).
+   */
+  getAllFeaturedPlaylists(args?: { limit?: number; offset?: number }) {
+    const params = new URLSearchParams();
+
+    if (args?.limit) {
+      params.append('limit', args.limit.toString());
+    }
+
+    if (args?.offset) {
+      params.append('offset', args.offset.toString());
+    }
+
+    return this.get<GetAllFeaturedPlaylists>(
+      '/browse/featured-playlists',
+      params
+    );
+  }
+
+  /**
+   * Get Current User's Profile
+   * Get detailed profile information about the current user (including the current user’s username).
+   */
+  getCurrentUsersProfile() {
+     return this.get<UserProfile>('/me')
   }
 }
 

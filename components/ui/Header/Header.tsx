@@ -1,8 +1,10 @@
-import Search from "@/components/common/Search";
-import Logotype from "@/components/ui/Logotype"
-import { ChangeEvent, useState } from "react";
+
+import { ChangeEvent, useCallback, useState } from "react";
 import { useSession, signIn, signOut } from 'next-auth/react';
 import Link from 'next/link';
+import Search from '@/components/common/Search';
+import Logotype from '@/components/ui/Logotype';
+import MenuButton from "@/components/ui/MenuButton";
 
 const Header = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -12,11 +14,22 @@ const Header = () => {
         setSearchQuery(event.target.value)
     }
 
+    const handleOnMenuClick = useCallback(() => {
+      console.log('handleOnMenuClick', session);
+      if ( !session ) {
+        signIn('spotify')
+      } else {
+        signOut()
+      }
+    }, [session])
+
     return (
       <div className="container mx-auto ">
         <div className="flex gap-x-8 py-6 items-center">
           <Link href="/" passHref>
-            <a title="Back to homepage"><Logotype /></a>
+            <a title="Back to homepage">
+              <Logotype />
+            </a>
           </Link>
           <div className="flex-1">
             <Search
@@ -25,12 +38,8 @@ const Header = () => {
               onChange={handleOnChange}
             />
           </div>
-          <div>
-            {session ? (
-              <button onClick={() => signOut()}>Sign out</button>
-            ) : (
-              <button onClick={() => signIn('spotify', { callbackUrl: 'http://localhost:3000' })}>Sign in</button>
-            )}
+          <div className="bg-black h-14 w-14 flex items-center justify-center">
+            <MenuButton onClick={handleOnMenuClick} />
           </div>
         </div>
       </div>
